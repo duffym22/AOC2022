@@ -7,6 +7,7 @@ global using AdventOfCode.Solutions.Utils;
 
 using System.Diagnostics;
 using System.Net;
+using System.Reflection;
 using AdventOfCode.Services;
 
 namespace AdventOfCode.Solutions;
@@ -84,20 +85,24 @@ public abstract class SolutionBase
 
     string LoadInput(bool debug = false)
     {
-        var inputFilepath =
-            $"./AdventOfCode.Solutions/Year{Year}/Day{Day:D2}/{(debug ? "debug" : "input")}";
+        string INPUT_FILEPATH = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, $"../../../AdventOfCode.Solutions/Year{Year}/Day{Day:D2}/{(debug ? "debug" : "input")}"));
+        string INPUT_URL = $"https://adventofcode.com/{Year}/day/{Day}/input";
 
-        if (File.Exists(inputFilepath) && new FileInfo(inputFilepath).Length > 0)
+        if (File.Exists(INPUT_FILEPATH) && new FileInfo(INPUT_FILEPATH).Length > 0)
         {
-            return File.ReadAllText(inputFilepath);
+            return File.ReadAllText(INPUT_FILEPATH);
         }
 
-        if (debug) return "";
+        if (debug)
+        {
+            Console.WriteLine("==== DEBUG INPUT USED ====");
+            return "";
+        }
 
         try
         {
             var input = AdventOfCodeService.FetchInput(Year, Day).Result;
-            File.WriteAllText(inputFilepath, input);
+            File.WriteAllText(INPUT_FILEPATH, input);
             return input;
         }
         catch (HttpRequestException e)
@@ -138,7 +143,7 @@ public abstract class SolutionBase
         + $"{ResultToString(2, Part2)}";
 
     string ResultToString(int part, SolutionResult result) =>
-        $"  - Part{part} => " + (string.IsNullOrEmpty(result.Answer) 
+        $"  - Part{part} => " + (string.IsNullOrEmpty(result.Answer)
             ? "Unsolved"
             : $"{result.Answer} ({result.Time.TotalMilliseconds}ms)");
 
