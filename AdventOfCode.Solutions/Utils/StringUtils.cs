@@ -56,4 +56,11 @@ public static class StringUtils
                 .ToArray();
         }
     }
+
+    public static List<string> SplitEvery(this string s, int size)
+    {
+        return s.Select((x, i) => i)
+            .Where(i => i % size == 0)
+            .Select(i => String.Concat(s.Skip(i).Take(size))).ToList();
+    }
 }
