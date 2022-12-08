@@ -95,7 +95,6 @@ public abstract class SolutionBase
 
         if (debug)
         {
-            Console.WriteLine("==== DEBUG INPUT USED ====");
             return "";
         }
 
